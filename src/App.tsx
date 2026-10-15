@@ -5,6 +5,7 @@ import { Leva } from "leva"
 import Experience from "./scene/Experience"
 import Light from "./scene/Light"
 import CameraRig from "./scene/CameraRig"
+import RetroPass from "./scene/RetroPass"
 
 const DEBUG_CAMERA = false
 
@@ -25,6 +26,7 @@ export default function App()
       >
         <Light />
         <Experience />
+        <RetroPass />
         {DEBUG_CAMERA
           ? <OrbitControls target = { [-0.5, 1, 0] } />
           : <CameraRig />}
