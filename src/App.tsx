@@ -6,6 +6,7 @@ import Experience from "./scene/Experience"
 import Light from "./scene/Light"
 import CameraRig from "./scene/CameraRig"
 import RetroPass from "./scene/RetroPass"
+import DialogBox from './ui/DialogBox'
 
 const DEBUG_CAMERA = false
 
@@ -31,6 +32,17 @@ export default function App()
           ? <OrbitControls target = { [-0.5, 1, 0] } />
           : <CameraRig />}
       </Canvas>
+      <div style = 
+      {{
+        position: 'fixed', 
+        left: 0, 
+        right: 0, 
+        bottom: 0, 
+        padding: 16, 
+        color: 'white' 
+      }}>
+        <DialogBox />
+      </div>
     </>
   )
 }
