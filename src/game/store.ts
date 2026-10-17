@@ -1,4 +1,3 @@
-// src/game/store.ts
 import { create } from 'zustand'
 import { ghosts } from '../data/ghosts'
 import type { Vfx } from '../data/types'
@@ -6,6 +5,8 @@ import { judge, normalize, type Verdict } from './judge'
 
 export type Phase = 'title' | 'battle' | 'ghostDown' | 'won' | 'lost'
 export interface Attempt { text: string; verdict: Verdict }
+
+export const MAX_HEARTS = 3
 
 interface GameState {
     phase: Phase
@@ -22,7 +23,7 @@ interface GameState {
 
 const initial = {
     phase: 'title' as Phase,
-    hearts: 3,
+    hearts: MAX_HEARTS,
     ghostIndex: 0,
     clues: 0,
     attempts: [] as Attempt[],
@@ -43,6 +44,7 @@ export const useGame = create<GameState>((set, get) => ({
         const result = judge(ghosts[s.ghostIndex], text)
         if (result.verdict === 'empty') return
 
+        // เคยตอบคำนี้แล้ว: ไม่เสียหัวใจซ้ำ ไม่บันทึกซ้ำ
         const key = normalize(text)
         if (s.attempts.some((a) => normalize(a.text) === key)) return
 

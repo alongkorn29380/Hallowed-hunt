@@ -1,4 +1,4 @@
-export type Vfx = 'beam' | 'projectile'
+export type Vfx = 'beam' | 'projectile' | 'none'
 
 export interface Fatal {
     keys: string[]
