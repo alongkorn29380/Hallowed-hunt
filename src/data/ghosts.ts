@@ -16,7 +16,7 @@ export const ghosts: GhostData[] = [
         ],
         partial: ['bullet', 'gun', 'wolfsbane', 'fire'],
     },
-    
+
     {
         id: 'kappa',
         name: 'Kappa',
@@ -81,5 +81,85 @@ export const ghosts: GhostData[] = [
             { keys: ['erase', 'erasing', 'rub out', 'wipe the letter', 'wipe the word', 'remove the letter', 'delete the letter', 'scratch out the letter'], vfx: 'none' },
         ],
         partial: ['water', 'fire', 'hammer', 'smash'],
+    },
+
+    {
+        id: 'oni',
+        name: 'Oni',
+        region: 'Japan',
+        model: '/models/ghosts/oni.glb',
+        clues: [
+            'A horned ogre that brings bad luck at the end of winter.',
+            'On the eve of spring, families throw something at the door and shout "Oni wa soto!"',
+            'Small, roasted, and edible. You eat one for every year of your age.',
+        ],
+        fatal: [
+            { keys: ['soybeans', 'soybean', 'roasted beans', 'beans', 'bean'], vfx: 'projectile' },
+        ],
+        partial: ['sardine', 'holly', 'sword', 'fire'],
+    },
+
+    {
+        id: 'krasue',
+        name: 'Krasue',
+        region: 'Thailand',
+        model: '/models/ghosts/krasue.glb',
+        clues: [
+            'By day she is a quiet woman. By night, only her head flies out.',
+            'A glowing trail of entrails drags behind her, snagging on everything.',
+            'Villagers line their fences with something sharp and prickly.',
+        ],
+        fatal: [
+            { keys: ['thorn', 'thorns', 'thorny branch', 'barbed wire'], vfx: 'projectile' },
+        ],
+        partial: ['sunrise', 'dawn', 'her body', 'hide the body'],
+    },
+
+    {
+        id: 'medusa',
+        name: 'Medusa',
+        region: 'Greece',
+        model: '/models/ghosts/medusa.glb',
+        clues: [
+            'Her gaze turns anyone who meets it into stone.',
+            'The hero never looked at her directly.',
+            'He watched her through something polished and flat.',
+        ],
+        fatal: [
+            { keys: ['mirror', 'mirrors', 'reflect', 'shield', 'bronze shield'], vfx: 'beam' },
+        ],
+        partial: ['blindfold', 'sword', 'sunglasses', 'close your eyes', 'helmet'],
+    },
+
+    {
+        id: 'fairy',
+        name: 'Fairy',
+        region: 'Ireland',
+        model: '/models/ghosts/fairy.glb',
+        clues: [
+            'Small, glittering, and fond of tricks. Ordinary charms barely bother it.',
+            'Old cottages hung a lucky charm over the door to keep it out.',
+            'It is the metal a blacksmith hammers: not silver, not gold.',
+        ],
+        fatal: [
+            { keys: ['cold iron', 'iron', 'horseshoe'], vfx: 'projectile' },
+        ],
+        partial: ['salt', 'bread', 'bell', 'rowan', 'clover'],
+    },
+
+    {
+        id: 'sphinx',
+        name: 'Sphinx',
+        region: 'Egypt',
+        model: '/models/ghosts/sphinx.glb',
+        clues: [
+            'Four legs in the morning, two at noon, three in the evening. What am I?',
+            'Morning is infancy. Evening is old age.',
+            'The third leg is a walking stick. Answer with what you are.',
+        ],
+        fatal: [
+            { keys: ['man', 'a man', 'human', 'humans', 'mankind', 'person'], vfx: 'none' },
+        ],
+        partial: ['baby', 'crawl', 'cane', 'walking stick', 'child', 'elder', 'woman'],
     },
 ]
