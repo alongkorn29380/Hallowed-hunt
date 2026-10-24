@@ -18,7 +18,7 @@ Built with React, TypeScript, Vite and React Three Fiber.
    | Partial | "It had a little effect..." | The ghost recoils. You lose nothing. |
    | Wrong | "It had no effect." | You lose a heart, the ghost attacks, and the next clue unlocks. |
 
-4. You have **3 hearts** across the whole run. If they reach 0, it's game over.
+4. You have **5 hearts** across the whole run, and you win one back (up to 5) each time you defeat a ghost. If they reach 0, it's game over.
 5. Repeating an answer you already tried is ignored. It costs no heart and isn't logged again.
 6. Defeat all five ghosts to win.
 
