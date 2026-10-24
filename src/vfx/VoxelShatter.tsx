@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
+import { useGame } from '../game/store'
 import {
     Color,
     Matrix4,
@@ -105,6 +106,7 @@ export default function VoxelShatter({ scene, floorY = 0 }: { scene: Object3D; f
 
         if (age.current >= LIFE) {
             mesh.visible = false
+            useGame.getState().setShatterDone(true)
             return
         }
 

@@ -71,6 +71,43 @@ describe('game store', () => {
         expect(g().hearts).toBe(MAX_HEARTS)
     })
 
+    it('shatterDone is false after a fatal answer until the effect reports done', () => {
+        g().start()
+        expect(g().shatterDone).toBe(true)
+        g().submit(fatal(0).keys[0])
+        expect(g().shatterDone).toBe(false)
+        g().setShatterDone(true)
+        expect(g().shatterDone).toBe(true)
+    })
+
+    it('a projectile kill waits for impact before the ghost shatters', () => {
+        const i = ghosts.findIndex((gh) => gh.fatal.some((f) => f.vfx === 'projectile'))
+        const f = ghosts[i].fatal.find((x) => x.vfx === 'projectile')!
+        g().start()
+        useGame.setState({ ghostIndex: i })
+        g().submit(f.keys[0])
+        expect(g().phase).toBe('ghostDown')
+        expect(g().impact).toBe(false)
+        g().setImpact(true)
+        expect(g().impact).toBe(true)
+    })
+
+    it('non-projectile kills shatter immediately', () => {
+        const i = ghosts.findIndex((gh) => gh.fatal.some((f) => f.vfx !== 'projectile'))
+        const f = ghosts[i].fatal.find((x) => x.vfx !== 'projectile')!
+        g().start()
+        useGame.setState({ ghostIndex: i })
+        g().submit(f.keys[0])
+        expect(g().impact).toBe(true)
+    })
+
+    it('start resets shatterDone', () => {
+        g().start()
+        g().submit(fatal(0).keys[0])
+        g().start()
+        expect(g().shatterDone).toBe(true)
+    })
+
     it('next moves on to the following ghost and resets the round', () => {
         g().start()
         g().submit(WRONG[0])

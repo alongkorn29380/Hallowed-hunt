@@ -17,6 +17,7 @@ export default function DialogBox()
     const submit = useGame((s) => s.submit)
     const start = useGame((s) => s.start)
     const next = useGame((s) => s.next)
+    const shatterDone = useGame((s) => s.shatterDone)
     const [text, setText] = useState('')
 
     const last = attempts[attempts.length - 1]
@@ -27,7 +28,7 @@ export default function DialogBox()
         return (
             <>
                 <p>{ last ? MESSAGES[last.verdict] : '' }</p>
-                <button onClick = { next }>Next</button>
+                <button onClick = { next } disabled = { !shatterDone }>Next</button>
             </>
         )
     }

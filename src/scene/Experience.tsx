@@ -2,6 +2,7 @@ import { useGLTF } from "@react-three/drei"
 import Exorcist from "./Exorcist"
 import Ghost from "./Ghost"
 import VoxelShatter from "../vfx/VoxelShatter"
+import Projectile from "../vfx/Projectile"
 import { ghosts } from "../data/ghosts"
 import { useGame } from "../game/store"
 
@@ -17,8 +18,10 @@ export default function Experience()
 {
     const ghostIndex = useGame ((s) => s.ghostIndex)
     const phase = useGame ((s) => s.phase)
+    const impact = useGame ((s) => s.impact)
     const ghost = ghosts[ghostIndex]
-    const ghostGone = phase === 'ghostDown' || phase === 'won'
+    const shattering = phase === 'ghostDown' && impact
+    const ghostGone = shattering || phase === 'won'
 
     return (
         <>
@@ -31,7 +34,8 @@ export default function Experience()
             </group>
 
             {/* outside the ghost group: voxel positions are already in world space */}
-            {phase === 'ghostDown' && <GhostShatter key = { ghost.id } id = { ghost.id } />}
+            {phase === 'ghostDown' && !impact && <Projectile key = { ghost.id } id = { ghost.id } />}
+            {shattering && <GhostShatter key = { ghost.id } id = { ghost.id } />}
 
             <group position = { [-2, 0, 2] }>
                 <mesh position-y = { -0.15 } receiveShadow>

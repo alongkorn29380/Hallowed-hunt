@@ -15,8 +15,12 @@ interface GameState {
     clues: number
     attempts: Attempt[]
     lastVfx: Vfx | null
+    shatterDone: boolean
+    impact: boolean
     start: () => void
     submit: (text: string) => void
+    setShatterDone: (done: boolean) => void
+    setImpact: (impact: boolean) => void
     next: () => void
     reset: () => void
 }
@@ -28,6 +32,8 @@ const initial = {
     clues: 0,
     attempts: [] as Attempt[],
     lastVfx: null as Vfx | null,
+    shatterDone: true,
+    impact: true,
 }
 
 export const useGame = create<GameState>((set, get) => ({
@@ -36,6 +42,10 @@ export const useGame = create<GameState>((set, get) => ({
     start: () => set({ ...initial, phase: 'battle' }),
 
     reset: () => set(initial),
+
+    setShatterDone: (shatterDone) => set({ shatterDone }),
+
+    setImpact: (impact) => set({ impact }),
 
     submit: (text) => {
         const s = get()
@@ -52,7 +62,14 @@ export const useGame = create<GameState>((set, get) => ({
 
         switch (result.verdict) {
             case 'fatal':
-                set({ attempts, phase: 'ghostDown', lastVfx: result.vfx ?? null })
+                set({
+                    attempts,
+                    phase: 'ghostDown',
+                    lastVfx: result.vfx ?? null,
+                    shatterDone: false,
+                    // a projectile must land before the ghost shatters
+                    impact: result.vfx !== 'projectile',
+                })
                 break
             case 'partial':
                 set({ attempts })
@@ -80,6 +97,6 @@ export const useGame = create<GameState>((set, get) => ({
             return
         }
 
-        set({ ghostIndex: nextIndex, clues: 0, attempts: [], lastVfx: null, phase: 'battle' })
+        set({ ghostIndex: nextIndex, clues: 0, attempts: [], lastVfx: null, impact: true, phase: 'battle' })
     },
 }))
