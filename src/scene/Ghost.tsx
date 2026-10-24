@@ -6,7 +6,7 @@ import { useReaction } from './useReaction'
 
 const TOWARD_EXORCIST: [number, number, number] = [-1, 0, 0.15]
 
-export default function Ghost({ id }: { id: string })
+export default function Ghost({ id, hidden = false }: { id: string; hidden?: boolean })
 {
     const { scene } = useGLTF(`./models/ghosts/${id}.glb`)
 
@@ -37,7 +37,7 @@ export default function Ghost({ id }: { id: string })
     }, [scene])
 
     return (
-        <group ref = { ref }>
+        <group ref = { ref } visible = { !hidden }>
             <primitive
                 object = { scene }
                 position = { [position.x, position.y, position.z] }
