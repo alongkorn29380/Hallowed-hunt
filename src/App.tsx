@@ -8,6 +8,7 @@ import CameraRig from "./scene/CameraRig"
 import RetroPass from "./scene/RetroPass"
 import DialogBox from './ui/DialogBox'
 import BattleHUD from './ui/BattleHUD'
+import TitleScreen from './ui/TitleScreen'
 
 const DEBUG_CAMERA = false
 
@@ -34,15 +35,8 @@ export default function App()
           : <CameraRig />}
       </Canvas>
       <BattleHUD />
-      <div style = 
-      {{
-        position: 'fixed', 
-        left: 0, 
-        right: 0, 
-        bottom: 0, 
-        padding: 16, 
-        color: 'white' 
-      }}>
+      <TitleScreen />
+      <div className = "dialog-dock">
         <DialogBox />
       </div>
     </>

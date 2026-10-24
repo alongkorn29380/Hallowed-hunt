@@ -2,6 +2,7 @@
 import { useState, type FormEvent } from 'react'
 import { useGame } from '../game/store'
 import type { Verdict } from '../game/judge'
+import './ui.css'
 
 const MESSAGES: Record<Verdict, string> = {
     fatal: "It's super effective!",
@@ -22,32 +23,32 @@ export default function DialogBox()
 
     const last = attempts[attempts.length - 1]
 
-    if (phase === 'title') return <button onClick = { start }>Start</button>
+    if (phase === 'title') return null
 
     if (phase === 'ghostDown') {
         return (
-            <>
-                <p>{ last ? MESSAGES[last.verdict] : '' }</p>
-                <button onClick = { next } disabled = { !shatterDone }>Next</button>
-            </>
+            <div className = "paper dialog">
+                <p className = "dialog-text" aria-live = "polite">{ last ? MESSAGES[last.verdict] : '' }</p>
+                <button className = "btn" onClick = { next } disabled = { !shatterDone }>Next</button>
+            </div>
         )
     }
 
     if (phase === 'won') {
         return (
-            <>
-                <p>You won!</p>
-                <button onClick = { start }>Play again</button>
-            </>
+            <div className = "paper dialog">
+                <p className = "dialog-text">You won!</p>
+                <button className = "btn" onClick = { start }>Play again</button>
+            </div>
         )
     }
 
     if (phase === 'lost') {
         return (
-            <>
-                <p>Game over</p>
-                <button onClick = { start }>Try again</button>
-            </>
+            <div className = "paper dialog">
+                <p className = "dialog-text">Game over</p>
+                <button className = "btn" onClick = { start }>Try again</button>
+            </div>
         )
     }
 
@@ -59,16 +60,20 @@ export default function DialogBox()
     }
 
     return (
-        <form onSubmit = { onSubmit }>
-            <p>{ last ? MESSAGES[last.verdict] : 'A ghost appears!' }</p>
-            <label htmlFor = "answer">What will you use? </label>
-            <input
-                id = "answer"
-                value = { text }
-                onChange = { (e) => setText(e.target.value) }
-                autoComplete = "off"
-            />
-            <button type = "submit">Use</button>
+        <form className = "paper dialog" onSubmit = { onSubmit }>
+            <p className = "dialog-text" aria-live = "polite">{ last ? MESSAGES[last.verdict] : 'A ghost appears!' }</p>
+            <div className = "dialog-row">
+                <label className = "dialog-label" htmlFor = "answer">What will you use?</label>
+                <input
+                    id = "answer"
+                    className = "answer-input"
+                    value = { text }
+                    onChange = { (e) => setText(e.target.value) }
+                    autoComplete = "off"
+                    autoFocus
+                />
+                <button className = "btn" type = "submit">Use</button>
+            </div>
         </form>
     )
 }
