@@ -6,7 +6,7 @@ import { judge, normalize, type Verdict } from './judge'
 export type Phase = 'title' | 'battle' | 'ghostDown' | 'won' | 'lost'
 export interface Attempt { text: string; verdict: Verdict }
 
-export const MAX_HEARTS = 3
+export const MAX_HEARTS = 5
 
 interface GameState {
     phase: Phase
@@ -65,10 +65,12 @@ export const useGame = create<GameState>((set, get) => ({
                 set({
                     attempts,
                     phase: 'ghostDown',
+                    // defeating a ghost wins one heart back
+                    hearts: Math.min(MAX_HEARTS, s.hearts + 1),
                     lastVfx: result.vfx ?? null,
                     shatterDone: false,
-                    // a projectile must land before the ghost shatters
-                    impact: result.vfx !== 'projectile',
+                    // a projectile or beam must land before the ghost shatters
+                    impact: result.vfx !== 'projectile' && result.vfx !== 'beam',
                 })
                 break
             case 'partial':

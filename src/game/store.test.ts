@@ -6,7 +6,7 @@ const g = () => useGame.getState()
 
 const fatal = (i: number) => ghosts[i].fatal[0]
 const partial = (i: number) => ghosts[i].partial[0]
-const WRONG = ['zzz1', 'zzz2', 'zzz3', 'zzz4']
+const WRONG = ['zzz1', 'zzz2', 'zzz3', 'zzz4', 'zzz5', 'zzz6']
 
 beforeEach(() => { g().reset() })
 
@@ -80,25 +80,18 @@ describe('game store', () => {
         expect(g().shatterDone).toBe(true)
     })
 
-    it('a projectile kill waits for impact before the ghost shatters', () => {
-        const i = ghosts.findIndex((gh) => gh.fatal.some((f) => f.vfx === 'projectile'))
-        const f = ghosts[i].fatal.find((x) => x.vfx === 'projectile')!
-        g().start()
-        useGame.setState({ ghostIndex: i })
-        g().submit(f.keys[0])
-        expect(g().phase).toBe('ghostDown')
-        expect(g().impact).toBe(false)
-        g().setImpact(true)
-        expect(g().impact).toBe(true)
-    })
-
-    it('non-projectile kills shatter immediately', () => {
-        const i = ghosts.findIndex((gh) => gh.fatal.some((f) => f.vfx !== 'projectile'))
-        const f = ghosts[i].fatal.find((x) => x.vfx !== 'projectile')!
-        g().start()
-        useGame.setState({ ghostIndex: i })
-        g().submit(f.keys[0])
-        expect(g().impact).toBe(true)
+    it('projectile and beam kills wait for impact, others shatter immediately', () => {
+        ghosts.forEach((ghost, i) => {
+            for (const f of ghost.fatal) {
+                g().start()
+                useGame.setState({ ghostIndex: i })
+                g().submit(f.keys[0])
+                expect(g().phase, `${ghost.id}: ${f.keys[0]}`).toBe('ghostDown')
+                expect(g().impact, `${ghost.id}: ${f.keys[0]}`).toBe(f.vfx === 'none')
+                g().setImpact(true)
+                expect(g().impact).toBe(true)
+            }
+        })
     })
 
     it('start resets shatterDone', () => {
@@ -111,13 +104,40 @@ describe('game store', () => {
     it('next moves on to the following ghost and resets the round', () => {
         g().start()
         g().submit(WRONG[0])
+        g().submit(WRONG[1])
         g().submit(fatal(0).keys[0])
         g().next()
         expect(g().phase).toBe('battle')
         expect(g().ghostIndex).toBe(1)
         expect(g().clues).toBe(0)
         expect(g().attempts).toHaveLength(0)
+        // two hearts lost, one won back for the kill
         expect(g().hearts).toBe(MAX_HEARTS - 1)
+    })
+
+    it('defeating a ghost wins a heart back, but never above the maximum', () => {
+        g().start()
+        g().submit(WRONG[0])
+        g().submit(WRONG[1])
+        expect(g().hearts).toBe(MAX_HEARTS - 2)
+        g().submit(fatal(0).keys[0])
+        expect(g().hearts).toBe(MAX_HEARTS - 1)
+
+        g().next()
+        g().submit(fatal(1).keys[0])
+        expect(g().hearts).toBe(MAX_HEARTS)
+
+        g().next()
+        g().submit(fatal(2).keys[0])
+        expect(g().hearts).toBe(MAX_HEARTS)
+    })
+
+    it('a win does not make the run safe: five wrong answers on the next ghost still lose', () => {
+        g().start()
+        g().submit(fatal(0).keys[0])
+        g().next()
+        for (let i = 0; i < MAX_HEARTS; i++) g().submit(WRONG[i])
+        expect(g().phase).toBe('lost')
     })
 
     it('next after the last ghost wins the run', () => {
