@@ -1,6 +1,10 @@
 import { useEffect } from 'react'
 import { useGLTF } from '@react-three/drei'
 import { useControls } from 'leva'
+import { useIdle } from './useIdle'
+import { useReaction } from './useReaction'
+
+const TOWARD_EXORCIST: [number, number, number] = [-1, 0, 0.15]
 
 export default function Ghost({ id }: { id: string })
 {
@@ -24,16 +28,21 @@ export default function Ghost({ id }: { id: string })
         },
     })
 
+    const ref = useIdle(scene)
+    useReaction(ref, TOWARD_EXORCIST)
+
     useEffect(() =>
     {
         scene.traverse((child) => { child.castShadow = true })
     }, [scene])
 
     return (
-        <primitive
-            object = { scene }
-            position = { [position.x, position.y, position.z] }
-            rotation-y = { rotationY }
-        />
+        <group ref = { ref }>
+            <primitive
+                object = { scene }
+                position = { [position.x, position.y, position.z] }
+                rotation-y = { rotationY }
+            />
+        </group>
     )
 }
