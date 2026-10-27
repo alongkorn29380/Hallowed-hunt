@@ -24,26 +24,37 @@ No other runtime dependencies without asking.
 
 ```
 public/models/exorcist.glb     (GLBs are final assets; the generator scripts were removed)
-public/models/ghosts/<id>.glb  werewolf, kappa, dracula, jiangshi, golem
+public/models/ghosts/<id>.glb  10 ghosts: werewolf, kappa, dracula, jiangshi, golem,
+                               oni, krasue, medusa, fairy, sphinx
 src/data/types.ts              GhostData, Fatal, Vfx ('beam' | 'projectile' | 'none')
-src/data/ghosts.ts             ghost data, in play order (werewolf = tutorial ... golem = boss)
+src/data/ghosts.ts             ghost data, in play order (werewolf = tutorial ... sphinx = last)
 src/game/judge.ts              judge(ghost, input) -> fatal | partial | wrong | empty (+ vfx)
-src/game/store.ts              zustand: phase, hearts, ghostIndex, clues, attempts, lastVfx
+src/game/store.ts              zustand: phase, hearts, ghostIndex, clues, attempts, lastVfx,
+                               shatterDone, impact, repeated
+src/game/ghostHp.ts            ghost health bar value from attempts (feedback only)
 src/scene/                     Experience, Light, CameraRig (+ useShake), Exorcist, Ghost,
                                RetroPass, useIdle.tsx, useReaction.ts
-src/vfx/VoxelShatter.tsx       InstancedMesh shatter built from node userData.voxels
-src/ui/                        DialogBox, BattleHUD (HTML overlay, outside <Canvas>)
+src/vfx/                       VoxelShatter (InstancedMesh from node userData.voxels),
+                               Projectile (per-ghost shapes in LOOKS), SunBeam
+src/audio/music.ts             procedural Web Audio music loop (no audio files), mute flag
+src/ui/                        DialogBox, BattleHUD, TitleScreen, EndScreen (win/lose),
+                               GhostCard (3D portrait card), MuteButton, Embers, ui.css
+                               (HTML overlay, outside <Canvas>; paper-style design)
 ```
 
 ## Game rules (invariants, tests depend on these)
 
-- 3 hearts for the whole run (`MAX_HEARTS` exported from store.ts), not per ghost.
+- 5 hearts for the whole run (`MAX_HEARTS` exported from store.ts), not per ghost. Defeating a
+  ghost wins one heart back, capped at `MAX_HEARTS`.
 - Verdicts: `fatal` kills, `partial` ("a little effect") costs nothing, `wrong` costs a heart and
   reveals the next clue (max 3), `empty` is ignored. Fatal is always checked before partial.
 - Input is normalized (lowercase, only a-z0-9) on both sides. A key matches if it equals the input,
   or if the key has 4+ characters and is contained in the input. Keys shorter than 4 chars
   must match exactly (so "sunday" does not match "sun").
-- Repeating an answer (after normalizing) is free and is not recorded.
+- Repeating an answer (after normalizing) is free and is not recorded; the store sets `repeated`
+  so the dialog can say "You already tried that."
+- `projectile` and `beam` kills wait for `impact` before the ghost shatters; Next stays disabled
+  until `shatterDone`.
 - Phases: title -> battle -> ghostDown -> (next) battle ... -> won; hearts at 0 -> lost.
 - All player-facing text is English. Ghost data: 3 clues, from vague to almost-the-answer.
 - Tests must be data-driven (use `ghosts[...]`, not hard-coded ghost names or counts).
@@ -91,21 +102,21 @@ the surrounding file rather than reformatting it.
 
 ## Schedule (2026)
 
-- Done by 24 Oct: scene, lights, locked camera + shake, retro pass, game logic + tests, HUD/dialog,
-  idle and attack/recoil animation
-- 24-27 Oct: VFX (voxel shatter, projectile, Dracula sunbeam, camera shake/flash)
-- 28-30 Oct: title screen, paper-style UI, audio, mobile layout, performance
-- 31 Oct - 1 Nov: test, deploy (Vercel/Netlify), submit
-Scope is locked: 5 ghosts, one stage (palette swaps), VFX limited to projectile, voxel shatter,
-and sunbeam. Mummy/medusa/pontianak only if there is spare time. If the loop is not solid by the
-checkpoints, cut ghosts before cutting polish.
+- Done: scene, lights, locked camera + shake, retro pass, game logic + tests, HUD/dialog,
+  idle and attack/recoil animation, VFX (voxel shatter, projectile, sunbeam), title screen,
+  paper-style UI, ghost HP bar, win/lose screens with ghost cards, procedural music + mute,
+  10 ghosts, Leva hidden, .gitignore, production build checked from a sub-folder
+- Skipped on purpose: mobile layout (desktop web only)
+- Left: deploy (Vercel/Netlify) and submit by 31 Oct - 1 Nov; optional sound effects
+Scope: 10 ghosts, one stage, VFX limited to projectile, voxel shatter and sunbeam.
 
 ## Known TODOs
 
 - Pixelation `granularity` is in screen pixels, so the look changes with screen size. Defaults ~8;
   higher makes faces unreadable. Better long-term: low `dpr` + `image-rendering: pixelated`.
-- Repeated answers give no feedback; show "You already tried that." (needs `submit` to report it).
-- Disable Next until the shatter animation finishes; sequence beam/projectile before the shatter.
-- Per-ghost pose (position/rotation) is shared from Leva; move to ghost data if models differ.
-- Remove or hide Leva (`<Leva hidden />`) before submission; keep `DEBUG_CAMERA = false`.
+- Per-ghost pose (position/rotation) is shared from Leva defaults; move to ghost data if models differ.
+- Leva is hidden (`<Leva hidden />`); to tweak values again set it back to `collapsed`. Keep `DEBUG_CAMERA = false`.
+- Medusa (mirror) uses the sunbeam VFX; a mirror-flash effect would fit better.
+- Key `iron` (fairy) also matches inside words like "environment" (4+ char keys match as substrings).
+- The player gets no cue when a defeated ghost returns a heart.
 - Bundle is ~1.5 MB (three.js); the Vite chunk warning is ignored until the polish phase.

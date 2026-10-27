@@ -1,6 +1,6 @@
 # Hallowed Hunt
 
-A 3D, Pokémon-style battle game about folklore monsters. An exorcist faces five ghosts from around the world. You don't pick from a menu. You **type** what you would use against each ghost, guided by clues in your Ghost Book.
+A 3D, Pokémon-style battle game about folklore monsters. An exorcist faces ten ghosts from around the world. You don't pick from a menu. You **type** what you would use against each ghost, guided by clues in your Ghost Book.
 
 Built with React, TypeScript, Vite and React Three Fiber.
 
@@ -19,8 +19,9 @@ Built with React, TypeScript, Vite and React Three Fiber.
    | Wrong | "It had no effect." | You lose a heart, the ghost attacks, and the next clue unlocks. |
 
 4. You have **5 hearts** across the whole run, and you win one back (up to 5) each time you defeat a ghost. If they reach 0, it's game over.
-5. Repeating an answer you already tried is ignored. It costs no heart and isn't logged again.
-6. Defeat all five ghosts to win.
+5. Repeating an answer you already tried costs no heart and isn't logged again; the game tells you ("You already tried that.").
+6. Partial answers chip away at the ghost's HP bar, but only a fatal answer finishes it.
+7. Defeat all ten ghosts to win. At the end, click a banished ghost to open its card (3D portrait, weakness and clues).
 
 ### The ghosts
 
@@ -31,6 +32,11 @@ Built with React, TypeScript, Vite and React Three Fiber.
 | Dracula | Romania |
 | Jiangshi | China |
 | Golem | Czech Republic |
+| Oni | Japan |
+| Krasue | Thailand |
+| Medusa | Greece |
+| Fairy | Ireland |
+| Sphinx | Egypt |
 
 Each ghost has three clues, which unlock one at a time as you make wrong guesses. Each also has one or more fatal answers and a list of partial answers. The solutions are in [src/data/ghosts.ts](src/data/ghosts.ts), so no spoilers here.
 
@@ -47,7 +53,11 @@ npm run lint      # ESLint
 npx vitest run    # unit tests (judge + store)
 ```
 
-A [Leva](https://github.com/pmndrs/leva) debug panel (collapsed, top-right) lets you tweak the camera, exorcist and ghost transforms, and a pixelation post-effect at runtime.
+A [Leva](https://github.com/pmndrs/leva) debug panel exists for tweaking the camera, exorcist and ghost transforms, and a pixelation post-effect. It is hidden (`<Leva hidden />` in `App.tsx`); switch it back to `<Leva collapsed />` while developing.
+
+The production build uses relative asset paths (`base: './'`), so the contents of `dist/` can be hosted at the root or in a sub-folder. Any static host works (for example Vercel or Netlify with build command `npm run build` and output directory `dist`).
+
+Music is generated in the browser with the Web Audio API (no audio files). It starts when you press **Start**; use the **♪** button (bottom left) to mute.
 
 ## Project structure
 
@@ -58,11 +68,18 @@ src/
   main.tsx              React entry point
   data/
     types.ts            GhostData / Fatal / Vfx types
-    ghosts.ts           The five ghosts: clues, fatal and partial answers
+    ghosts.ts           The ten ghosts: clues, fatal and partial answers
   game/
     judge.ts            Normalises input and returns fatal / partial / wrong / empty
     store.ts            Zustand store: phase, hearts, ghost index, clues, attempts
-    *.test.ts           Vitest tests for judge and store
+    ghostHp.ts          Ghost health bar value (partial answers chip away at it)
+    *.test.ts           Vitest tests for judge, store and ghost HP
+  audio/
+    music.ts            Procedural background music (Web Audio) and mute flag
+  vfx/
+    VoxelShatter.tsx    Ghost breaks into voxels when defeated
+    Projectile.tsx      Per-ghost projectile shapes
+    SunBeam.tsx         Column of light for beam kills
   scene/
     Experience.tsx      Two platforms: exorcist (left) and current ghost (right)
     Exorcist.tsx        Loads and shadows the exorcist model, with a warm point light
@@ -73,8 +90,13 @@ src/
     useIdle.tsx         Idle bobbing for the ghost and Head/ArmL/ArmR nodes
     useReaction.ts      Ghost lunges on a wrong answer and recoils on a partial one
   ui/
-    DialogBox.tsx       Title, answer form, and win/lose screens
-    BattleHUD.tsx       Ghost name, hearts and Ghost Book clues
+    DialogBox.tsx       Answer form and battle messages
+    BattleHUD.tsx       Ghost name, HP bar, hearts and Ghost Book clues
+    TitleScreen.tsx     Title screen
+    EndScreen.tsx       Win and lose screens
+    GhostCard.tsx       Card with a 3D portrait, weakness and clues
+    MuteButton.tsx      Music on/off
+    ui.css              Paper-style design
 ```
 
 ## How it works
@@ -88,15 +110,9 @@ src/
 
 React 19 · TypeScript · Vite · three.js · @react-three/fiber · @react-three/drei · @react-three/postprocessing · Zustand · Leva · Vitest · ESLint
 
-## Roadmap
-
-- VFX: voxel shatter on defeat, projectile, Dracula sunbeam (planned in `src/vfx/`)
-- Title screen, paper-style UI, audio, mobile layout, performance
-- Hide Leva (`<Leva hidden />`) before submission
-
 ## Notes
 
 - GLB models are final assets. The generator scripts were removed, so `npm run models` no longer works.
-- `howler` is installed but not used yet (audio is planned).
-- The `beam` and `projectile` values exist in the ghost data, but their effects are not rendered yet.
-- `node_modules/` and `dist/` are committed to git. Consider adding a `.gitignore`.
+- `howler` is installed but not used (the music is synthesised, not played from a file).
+- The layout targets desktop browsers; there is no mobile layout.
+- Possible next steps: sound effects, a mirror-flash effect for Medusa, a cue when a defeated ghost returns a heart.
