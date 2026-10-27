@@ -18,6 +18,7 @@ export default function DialogBox()
     const submit = useGame((s) => s.submit)
     const next = useGame((s) => s.next)
     const shatterDone = useGame((s) => s.shatterDone)
+    const repeated = useGame((s) => s.repeated)
     const [text, setText] = useState('')
 
     const last = attempts[attempts.length - 1]
@@ -43,7 +44,7 @@ export default function DialogBox()
 
     return (
         <form className = "paper dialog" onSubmit = { onSubmit }>
-            <p className = "dialog-text" aria-live = "polite">{ last ? MESSAGES[last.verdict] : 'A ghost appears!' }</p>
+            <p className = "dialog-text" aria-live = "polite">{ repeated ? 'You already tried that.' : last ? MESSAGES[last.verdict] : 'A ghost appears!' }</p>
             <div className = "dialog-row">
                 <label className = "dialog-label" htmlFor = "answer">What will you use?</label>
                 <input

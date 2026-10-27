@@ -17,6 +17,7 @@ interface GameState {
     lastVfx: Vfx | null
     shatterDone: boolean
     impact: boolean
+    repeated: boolean
     start: () => void
     submit: (text: string) => void
     setShatterDone: (done: boolean) => void
@@ -34,6 +35,7 @@ const initial = {
     lastVfx: null as Vfx | null,
     shatterDone: true,
     impact: true,
+    repeated: false,
 }
 
 export const useGame = create<GameState>((set, get) => ({
@@ -54,16 +56,20 @@ export const useGame = create<GameState>((set, get) => ({
         const result = judge(ghosts[s.ghostIndex], text)
         if (result.verdict === 'empty') return
 
-        // เคยตอบคำนี้แล้ว: ไม่เสียหัวใจซ้ำ ไม่บันทึกซ้ำ
+        // เคยตอบคำนี้แล้ว: ไม่เสียหัวใจซ้ำ ไม่บันทึกซ้ำ (แต่บอกผู้เล่นให้รู้)
         const key = normalize(text)
-        if (s.attempts.some((a) => normalize(a.text) === key)) return
+        if (s.attempts.some((a) => normalize(a.text) === key)) {
+            set({ repeated: true })
+            return
+        }
 
         const attempts = [...s.attempts, { text: text.trim(), verdict: result.verdict }]
+        const recorded = { attempts, repeated: false }
 
         switch (result.verdict) {
             case 'fatal':
                 set({
-                    attempts,
+                    ...recorded,
                     phase: 'ghostDown',
                     // defeating a ghost wins one heart back
                     hearts: Math.min(MAX_HEARTS, s.hearts + 1),
@@ -74,12 +80,12 @@ export const useGame = create<GameState>((set, get) => ({
                 })
                 break
             case 'partial':
-                set({ attempts })
+                set(recorded)
                 break
             case 'wrong': {
                 const hearts = s.hearts - 1
                 set({
-                    attempts,
+                    ...recorded,
                     hearts,
                     clues: Math.min(3, s.clues + 1),
                     phase: hearts <= 0 ? 'lost' : 'battle',
@@ -99,6 +105,6 @@ export const useGame = create<GameState>((set, get) => ({
             return
         }
 
-        set({ ghostIndex: nextIndex, clues: 0, attempts: [], lastVfx: null, impact: true, phase: 'battle' })
+        set({ ghostIndex: nextIndex, clues: 0, attempts: [], repeated: false, lastVfx: null, impact: true, phase: 'battle' })
     },
 }))

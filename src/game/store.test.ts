@@ -42,6 +42,17 @@ describe('game store', () => {
         expect(g().attempts).toHaveLength(1)
     })
 
+    it('a repeated answer is flagged, and the flag clears on the next new answer', () => {
+        g().start()
+        g().submit(WRONG[0])
+        expect(g().repeated).toBe(false)
+        g().submit(WRONG[0])
+        expect(g().repeated).toBe(true)
+        expect(g().hearts).toBe(MAX_HEARTS - 1)
+        g().submit(WRONG[1])
+        expect(g().repeated).toBe(false)
+    })
+
     it('empty input is ignored', () => {
         g().start()
         g().submit('   ')
