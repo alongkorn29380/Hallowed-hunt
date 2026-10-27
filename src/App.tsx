@@ -18,7 +18,7 @@ export default function App()
 {
   return (
     <>
-      <Leva collapsed />
+      <Leva hidden />
       <Canvas
         shadows
         dpr = {[1, 1.5]}
