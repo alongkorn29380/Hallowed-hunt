@@ -16,38 +16,20 @@ export default function DialogBox()
     const phase = useGame((s) => s.phase)
     const attempts = useGame((s) => s.attempts)
     const submit = useGame((s) => s.submit)
-    const start = useGame((s) => s.start)
     const next = useGame((s) => s.next)
     const shatterDone = useGame((s) => s.shatterDone)
     const [text, setText] = useState('')
 
     const last = attempts[attempts.length - 1]
 
-    if (phase === 'title') return null
+    // title, win and lose have their own full-screen views
+    if (phase === 'title' || phase === 'won' || phase === 'lost') return null
 
     if (phase === 'ghostDown') {
         return (
             <div className = "paper dialog">
                 <p className = "dialog-text" aria-live = "polite">{ last ? MESSAGES[last.verdict] : '' }</p>
                 <button className = "btn" onClick = { next } disabled = { !shatterDone }>Next</button>
-            </div>
-        )
-    }
-
-    if (phase === 'won') {
-        return (
-            <div className = "paper dialog">
-                <p className = "dialog-text">You won!</p>
-                <button className = "btn" onClick = { start }>Play again</button>
-            </div>
-        )
-    }
-
-    if (phase === 'lost') {
-        return (
-            <div className = "paper dialog">
-                <p className = "dialog-text">Game over</p>
-                <button className = "btn" onClick = { start }>Try again</button>
             </div>
         )
     }

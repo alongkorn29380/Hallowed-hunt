@@ -11,7 +11,7 @@ export default function BattleHUD()
     const clues = useGame((s) => s.clues)
     const attempts = useGame((s) => s.attempts)
 
-    if (phase === 'title') return null
+    if (phase === 'title' || phase === 'won' || phase === 'lost') return null
 
     const ghost = ghosts[ghostIndex]
     const hp = ghostHp(attempts)

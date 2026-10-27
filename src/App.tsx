@@ -9,6 +9,8 @@ import RetroPass from "./scene/RetroPass"
 import DialogBox from './ui/DialogBox'
 import BattleHUD from './ui/BattleHUD'
 import TitleScreen from './ui/TitleScreen'
+import EndScreen from './ui/EndScreen'
+import MuteButton from './ui/MuteButton'
 
 const DEBUG_CAMERA = false
 
@@ -36,6 +38,8 @@ export default function App()
       </Canvas>
       <BattleHUD />
       <TitleScreen />
+      <EndScreen />
+      <MuteButton />
       <div className = "dialog-dock">
         <DialogBox />
       </div>

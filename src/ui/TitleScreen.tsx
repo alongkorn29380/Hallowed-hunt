@@ -1,16 +1,8 @@
+import { startMusic } from '../audio/music'
 import { ghosts } from '../data/ghosts'
 import { MAX_HEARTS, useGame } from '../game/store'
+import Embers from './Embers'
 import './ui.css'
-
-const EMBERS = 16
-
-// Deterministic spread so the render stays pure (no Math.random)
-const embers = Array.from({ length: EMBERS }, (_, i) => ({
-    left: (i * 37 + 11) % 100,
-    delay: (i * 0.9) % 7,
-    duration: 6 + (i * 5) % 6,
-    size: 3 + (i % 3) * 2,
-}))
 
 export default function TitleScreen()
 {
@@ -19,22 +11,16 @@ export default function TitleScreen()
 
     if (phase !== 'title') return null
 
+    // browsers only allow audio after a click, so the music starts here
+    const onStart = () =>
+    {
+        startMusic()
+        start()
+    }
+
     return (
         <div className = "title-screen">
-            <div className = "embers" aria-hidden = "true">
-                { embers.map((e, i) => (
-                    <span
-                        key = { i }
-                        style = {{
-                            left: `${e.left}%`,
-                            width: e.size,
-                            height: e.size,
-                            animationDelay: `${e.delay}s`,
-                            animationDuration: `${e.duration}s`,
-                        }}
-                    />
-                )) }
-            </div>
+            <Embers />
 
             <header className = "title-top">
                 <p className = "title-kicker">A ghost-hunting battle</p>
@@ -55,7 +41,7 @@ export default function TitleScreen()
                     )) }
                 </ul>
 
-                <button className = "title-start" onClick = { start } autoFocus>
+                <button className = "title-start" onClick = { onStart } autoFocus>
                     <span className = "title-start-arrow">▶</span> Start
                 </button>
                 <p className = "title-hint">
