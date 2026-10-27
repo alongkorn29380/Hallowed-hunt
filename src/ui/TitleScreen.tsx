@@ -11,7 +11,6 @@ export default function TitleScreen()
 
     if (phase !== 'title') return null
 
-    // browsers only allow audio after a click, so the music starts here
     const onStart = () =>
     {
         startMusic()

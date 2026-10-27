@@ -26,10 +26,8 @@ export default function VoxelShatter({ scene, floorY = 0 }: { scene: Object3D; f
 
     const { positions, velocities, colors, size } = useMemo(() =>
     {
-        // matrixWorld includes the platform and the Leva offset; visibility does not matter
         scene.updateWorldMatrix(true, true)
 
-        // voxelSize and palette live on the model's root node, not on the glTF scene group
         let size = 0.1
         let palette: string[] = []
         scene.traverse((node) =>

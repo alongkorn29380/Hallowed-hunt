@@ -22,7 +22,6 @@ function Part({ size, x = 0, y = 0, z = 0, color, glow = 1.2 }: { size: [number,
     )
 }
 
-// Every shape points along +x, the direction of flight.
 function Bullet()
 {
     return (
@@ -76,7 +75,6 @@ function Thorns()
     )
 }
 
-// A C-shaped horseshoe, open toward the direction of flight
 function Horseshoe()
 {
     return (
@@ -110,8 +108,6 @@ const LOOKS: Record<string, Look> = {
 }
 const FALLBACK: Look = { Shape: Cube, spin: [12, 9, 0], glow: '#ffffff' }
 
-// Flies from the exorcist to the ghost, then tells the store it hit.
-// The outer group is placed once; useFrame only moves the inner group.
 export default function Projectile({ id }: { id: string })
 {
     const ref = useRef<Group>(null)

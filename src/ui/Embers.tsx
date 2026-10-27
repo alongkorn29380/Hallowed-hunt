@@ -2,7 +2,6 @@ import './ui.css'
 
 const EMBERS = 16
 
-// Deterministic spread so the render stays pure (no Math.random)
 const embers = Array.from({ length: EMBERS }, (_, i) => ({
     left: (i * 37 + 11) % 100,
     delay: (i * 0.9) % 7,

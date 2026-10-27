@@ -4,7 +4,6 @@ import { AdditiveBlending, DoubleSide, type Group, type MeshBasicMaterial } from
 import { useGame } from '../game/store'
 import { useShake } from '../scene/CameraRig'
 
-// Same spot as the ghost platform in Experience.tsx
 const POSITION: [number, number, number] = [5, 0.8, 1]
 const HEIGHT = 14
 const OUTER_RADIUS = 0.9
@@ -18,8 +17,6 @@ const MAX_DT = 0.05
 
 const COLOR = '#fff1b0'
 
-// A column of sunlight falls on the ghost. At HIT it tells the store the ghost
-// was struck (the shatter starts), then the beam fades out on its own.
 export default function SunBeam()
 {
     const group = useRef<Group>(null)

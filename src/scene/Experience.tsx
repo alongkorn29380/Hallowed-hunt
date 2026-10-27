@@ -35,7 +35,6 @@ export default function Experience()
                 <Ghost id = { ghost.id } hidden = { ghostGone } />
             </group>
 
-            {/* outside the ghost group: voxel positions are already in world space */}
             {phase === 'ghostDown' && vfx === 'projectile' && !impact && <Projectile key = { `projectile-${ghost.id}` } id = { ghost.id } />}
             {phase === 'ghostDown' && vfx === 'beam' && <SunBeam key = { `beam-${ghost.id}` } />}
             {shattering && <GhostShatter key = { `shatter-${ghost.id}` } id = { ghost.id } />}

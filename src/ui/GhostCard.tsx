@@ -5,8 +5,6 @@ import type { Group } from 'three'
 import type { GhostData } from '../data/types'
 import './ui.css'
 
-// The model is cloned: the cached glTF scene is shared with the battle scene,
-// and an object can only have one parent.
 function Portrait({ id }: { id: string })
 {
     const { scene } = useGLTF(`./models/ghosts/${id}.glb`)
@@ -14,7 +12,6 @@ function Portrait({ id }: { id: string })
 
     useFrame(({ clock }) =>
     {
-        // sway left and right so the model keeps facing the camera
         if (ref.current) ref.current.rotation.y = Math.sin(clock.elapsedTime * 0.8) * 0.6
     })
 

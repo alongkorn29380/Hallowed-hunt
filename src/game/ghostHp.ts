@@ -1,7 +1,4 @@
 import type { Attempt } from './store'
-
-// The ghost's health bar is only feedback: partial answers chip away at it,
-// but only a fatal answer ever empties it (partial never kills).
 export const PARTIAL_DAMAGE = 0.2
 export const MIN_HP = 0.1
 

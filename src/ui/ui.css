@@ -79,8 +79,6 @@
     box-shadow: none;
 }
 
-/* ---------- battle HUD (Ghost Book) ---------- */
-
 .hud
 {
     position: fixed;
@@ -95,7 +93,6 @@
 
 .hud::before
 {
-    /* strip of tape */
     content: '';
     position: absolute;
     top: -14px;
@@ -212,8 +209,6 @@
     to { opacity: 1; transform: none; }
 }
 
-/* ---------- dialog box ---------- */
-
 .dialog-dock
 {
     position: fixed;
@@ -268,8 +263,6 @@
     padding: 0.4rem 0.6rem;
 }
 
-/* ---------- music toggle ---------- */
-
 .mute-btn
 {
     position: fixed;
@@ -295,8 +288,6 @@
     outline-offset: 2px;
 }
 
-/* ---------- title screen ---------- */
-
 .title-screen
 {
     position: fixed;
@@ -307,7 +298,6 @@
     align-items: center;
     padding: 28px 16px 24px;
     overflow: hidden;
-    /* dark at the edges, clear in the middle so the 3D scene stays visible */
     background:
         linear-gradient(to bottom, rgba(16, 12, 32, 0.85), rgba(16, 12, 32, 0) 38%),
         linear-gradient(to top, rgba(16, 12, 32, 0.85), rgba(16, 12, 32, 0) 30%),
@@ -482,8 +472,6 @@
     animation: fade-in 0.8s ease-out 1.6s both;
 }
 
-/* ---------- win / lose ---------- */
-
 .title-hunt
 {
     font-variant-numeric: lining-nums;
@@ -550,8 +538,6 @@ button.tag.done:focus-visible
 {
     margin: -0.8rem 0 1rem;
 }
-
-/* ---------- ghost card ---------- */
 
 .card-backdrop
 {
@@ -678,7 +664,6 @@ button.tag.done:focus-visible
     to { opacity: 1; transform: rotate(-0.8deg); }
 }
 
-/* drifting embers */
 .embers
 {
     position: absolute;

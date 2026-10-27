@@ -1,8 +1,5 @@
-// Procedural background music (Web Audio): a spooky chiptune loop, no audio files needed.
-// Browsers only allow audio after a user gesture, so startMusic() is called from the Start button.
-
 const BPM = 84
-const STEP = 60 / BPM / 2 // one eighth note, in seconds
+const STEP = 60 / BPM / 2
 const STEPS_PER_BAR = 8
 const LOOKAHEAD = 0.2
 const TICK_MS = 50
@@ -68,7 +65,6 @@ export function setMuted(value: boolean)
     try {
         localStorage.setItem(STORAGE_KEY, value ? '1' : '0')
     } catch {
-        // storage can be blocked; the choice just won't be remembered
     }
     if (ctx && master) master.gain.setTargetAtTime(value ? 0 : MASTER_VOLUME, ctx.currentTime, 0.1)
 }

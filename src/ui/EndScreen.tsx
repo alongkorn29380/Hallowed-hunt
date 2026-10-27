@@ -16,7 +16,6 @@ export default function EndScreen()
 
     const won = phase === 'won'
 
-    // on a win every ghost is banished; on a loss only the ones before the current one
     const banished = won ? ghosts.length : ghostIndex
 
     const close = useCallback(() => setOpen(null), [])
